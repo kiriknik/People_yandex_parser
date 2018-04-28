@@ -8,6 +8,7 @@ import urllib
 import re
 import sys
 reload(sys)
+import os.path
 sys.setdefaultencoding('utf8')
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -16,13 +17,15 @@ parser.add_argument('-w', '--work', required=True, help='Place of work')
 parser.add_argument('-l', '--last', required=False, type=int, help='Last page to parse, default is 10')
 parser.add_argument('-f', '--first', required=False, type=int, help='First page to parse, default is 0')
 parser.add_argument('-e', '--email', required=False, help='End of Emails')
+parser.add_argument('-s', '--save_to_file', default='WTFIMDOINGNOWLONGSTRING', type=str, help='Save to file(default place of work))', action="store",nargs='?')
 parser.add_argument('-t', '--type', required=False, type=int,
-                    help='Type of generation(1=N.Surname,2=Surname.N,3=Surname,4=Surname.N.P)')
+                    help='Type of generation(1=N.Surname,2=Surname.N,3=Surname,4=Surname.N.P,5=SurnameN,6=NSurname,7=NameS,8=SName)')
 args = parser.parse_args()
 if args.type is None: args.type = 1
 if args.email is None: args.email = ""
 if args.last is None: args.last = 10
 if args.first is None: args.first = 0
+if args.save_to_file is None: args.save_to_file = args.work
 emails = set()
 page = args.first
 last = args.last
@@ -146,7 +149,6 @@ def dog(end_of_email):
 
 def email(string, type):
     if type == 1:
-        # return (string[0]+"."+string[string.rfind(" ")+1:]+dog+args.email)
         return (name(string)[0] + "." + surname(string) + dog(args.email))
     if type == 2:
         return (surname(string) + "." + name(string)[0] + dog(args.email))
@@ -154,6 +156,47 @@ def email(string, type):
         return (surname(string) + dog(args.email))
     if type == 4:
         return (surname(string) + "." + name(string)[0])
+    if type == 5:
+        return (surname(string) + name(string)[0]+ dog(args.email))
+    if type == 6:
+        return (name(string)[0]+ surname(string) + dog(args.email))
+    if type == 7:
+        return (name(string)+surname(string)[0] + dog(args.email))
+    if type == 8:
+        return (surname(string)[0] + name(string)+ dog(args.email))
+
+
+def Save_file(emails):
+    if os.path.exists(str(args.save_to_file).replace(" ", "_")+'.txt')==True:
+        print ("W0W W0W W0W Pogodi pogodi pogodi(untranslatable wordplay)")
+        print ("This file already exists")
+        print ("What would you like to do?")
+        print ("Delete or append to the end ?(d/a)")
+        name=raw_input()
+        if name=="d" or name=="D":
+            print("Prepare to destroy with greek bloods")
+            print("The file is overwritten")
+            f = open(str(args.save_to_file).replace(" ", "_")+'.txt', 'w')
+            for element in emails:
+                f.write(element + '\n')
+        else:
+            if name=="a" or name=="A":
+                print ("Ok,Append to the end of Death Star")
+                f = open(str(args.save_to_file).replace(" ", "_") + '.txt', 'a')
+                for element in emails:
+                    f.write(element + '\n')
+            else:
+                print ("I dont understand-sorry")
+    else:
+        #print (False)
+        print("File doesnt exists")
+        print("Prepare to file creation")
+        f = open(str(args.save_to_file).replace(" ", "_")+'.txt', 'w')
+        print("File created")
+        for element in emails:
+            f.write(element + '\n')
+
+
 
 
 def main():
@@ -170,10 +213,10 @@ def main():
             name=name[:name.rfind("–")]
             name=transliterate(name).strip()
             list_elements.add(name)
-    print ""
-    print "I find " + str(len(list_elements)) +" people"
-    print "Thank You for choosing our company"
-    print ""
+    print ("")
+    print ("I find " + str(len(list_elements)) +" people")
+    print ("Thank You for choosing our company")
+    print ("")
     for element in list_elements:
         if type != 4:
             emails.add(email(element, type))
@@ -181,8 +224,9 @@ def main():
             for i in range(65, 91):
                 emails.add(email(element, 4) + "." + chr(i) + dog(args.email))
     for element in emails:
-        print element
-        #pass
+        print (element)
+    if args.save_to_file!="WTFIMDOINGNOWLONGSTRING":
+        Save_file(emails)
 
 if __name__ == "__main__":
     main()
