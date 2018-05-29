@@ -18,13 +18,21 @@ Arguments:
 With example of user Thomas Anderson:
 
 1=N.Surname:T.Anderson
+
 2=Surname.N:Anderson.T
+
 3=Surname:Anderson
+
 4=Surname.N.P:Anderson.T.A(Anderson.T.B etc to Anderson.T.Z)
+
 5=SurnameN:AndersonT
+
 6=NSurname:TAnderson
+
 7=NameS:ThomasA
+
 8=SName:AThomas
+
 
 Usage:
 
