@@ -19,7 +19,7 @@ parser.add_argument('-f', '--first', required=False, type=int, help='First page 
 parser.add_argument('-e', '--email', required=False, help='End of Emails')
 parser.add_argument('-s', '--save_to_file', default='WTFIMDOINGNOWLONGSTRING', type=str, help='Save to file(default place of work))', action="store",nargs='?')
 parser.add_argument('-t', '--type', required=False, type=int,
-                    help='Type of generation(1=N.Surname,2=Surname.N,3=Surname,4=Surname.N.P,5=SurnameN,6=NSurname,7=NameS,8=SName)')
+                    help='Type of generation(1=N.Surname,2=Surname.N,3=Surname,4=Surname.N.P,5=SurnameN,6=NSurname,7=NameS,8=SName,9=Arabs(dont delete -))')
 args = parser.parse_args()
 if args.type is None: args.type = 1
 if args.email is None: args.email = ""
@@ -164,6 +164,8 @@ def email(string, type):
         return (name(string)+surname(string)[0] + dog(args.email))
     if type == 8:
         return (surname(string)[0] + name(string)+ dog(args.email))
+    if type == 9:
+        return (name(string)[0] + "."+ string[string.find(" ")+1:].strip().replace(" ","-")+ dog(args.email))
 
 
 def Save_file(emails):
